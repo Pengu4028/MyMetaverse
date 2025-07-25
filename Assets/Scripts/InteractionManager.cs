@@ -12,9 +12,10 @@ public class InteractionManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void StartInteraction(GameObject obj)
-    {
-        Debug.Log("Interacting with: " + obj.name);
-        // 오브젝트에 따라 미니게임 실행, 대화 등 처리
-    }
+    //안씀!!
+    //public void StartInteraction(GameObject obj)
+    //{
+    //    Debug.Log("Interacting with: " + obj.name);
+    //    // 오브젝트에 따라 미니게임 실행, 대화 등 처리
+    //}
 }

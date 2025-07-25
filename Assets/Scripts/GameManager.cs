@@ -1,12 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro; // UI용
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     private int score = 0;
+
+    public TextMeshProUGUI scoreText;
+    public GameObject gameOverUI;
+
+    private float minigameDuration = 15f;
+    private bool isMinigameActive = false;
 
     private void Awake()
     {
@@ -16,23 +23,66 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    void Start()
+    {
+        if (gameOverUI != null)
+            gameOverUI.SetActive(false);
+
+        UpdateScoreUI();
+    }
+
     public void StartMinigame(string name)
     {
         Debug.Log("Starting Minigame: " + name);
-        // 씬 전환 또는 미니게임 UI 활성화
+        score = 0;
+        UpdateScoreUI();
+        isMinigameActive = true;
+
+        if (gameOverUI != null)
+            gameOverUI.SetActive(false);
+
+        StartCoroutine(MinigameTimer());
     }
 
-    public void EndMinigame(int score)
+    IEnumerator MinigameTimer()
     {
-        Debug.Log("Minigame Ended. Score: " + score);
-        // 점수 저장 및 결과 처리
+        yield return new WaitForSeconds(minigameDuration);
+        EndMinigame(score);
+    }
+
+    public void EndMinigame(int finalScore)
+    {
+        Debug.Log("Minigame Ended. Score: " + finalScore);
+        isMinigameActive = false;
+
+        if (gameOverUI != null)
+        {
+            gameOverUI.SetActive(true);
+            if (scoreText != null)
+                scoreText.text = "Final Score: " + finalScore;
+        }
+
+        StartCoroutine(ReturnToMainSceneAfterDelay(3f));
+    }
+
+    IEnumerator ReturnToMainSceneAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene("MainScene");
     }
 
     public void AddScore(int amount)
     {
+        if (!isMinigameActive) return;
+
         score += amount;
+        UpdateScoreUI();
         Debug.Log("Current Score: " + score);
-        // UI 점수 갱신 등 추가 작업 가능
     }
 
+    private void UpdateScoreUI()
+    {
+        if (scoreText != null)
+            scoreText.text = "Score: " + score;
+    }
 }
