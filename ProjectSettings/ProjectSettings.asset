@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 26
-  productGUID: 00000000000000000000000000000000
+  productGUID: da8f6842df1e14c42886f21d59553583
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -831,7 +831,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: MyMetaverse
-  metroPackageVersion: 
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -839,7 +839,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: MyMetaverse
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: MyMetaverse
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -910,7 +910,7 @@ PlayerSettings:
   cloudProjectId: 46b35187-4f14-4e4a-9d27-6b3c559a55a0
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
+  projectName: MyMetaverse
   organizationId: kga4028
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

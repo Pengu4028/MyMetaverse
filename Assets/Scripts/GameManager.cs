@@ -6,10 +6,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    private int score = 0;
+
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
 
     public void StartMinigame(string name)
@@ -23,4 +27,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Minigame Ended. Score: " + score);
         // 점수 저장 및 결과 처리
     }
+
+    public void AddScore(int amount)
+    {
+        score += amount;
+        Debug.Log("Current Score: " + score);
+        // UI 점수 갱신 등 추가 작업 가능
+    }
+
 }
