@@ -3,14 +3,14 @@ using UnityEngine;
 public class TheStack : MonoBehaviour
 {
     // Const Value
-    private const float BoundSize = 3.5f;     
-    private const float MovingBoundsSize = 3f;   
-    private const float StackMovingSpeed = 5.0f; 
-    private const float BlockMovingSpeed = 3.5f;  
-    private const float ErrorMargin = 0.1f;        
-        
+    private const float BoundSize = 3.5f;
+    private const float MovingBoundsSize = 3f;
+    private const float StackMovingSpeed = 5.0f;
+    private const float BlockMovingSpeed = 3.5f;
+    private const float ErrorMargin = 0.1f;
+
     public GameObject originBlock = null;
-    
+
     private Vector3 prevBlockPosition;
     private Vector3 desiredPosition;
     private Vector3 stackBounds = new Vector2(BoundSize, BoundSize);
@@ -21,24 +21,25 @@ public class TheStack : MonoBehaviour
 
     int stackCount = -1;
     int comboCount = 0;
-    
+
     public Color prevColor;
     public Color nextColor;
-    
+
     bool isMovingX = true;
-    
+
     void Start()
     {
-        if(originBlock == null)
+        if (originBlock == null)
         {
             Debug.Log("OriginBlock is NULL");
             return;
         }
-        
+
         prevColor = GetRandomColor();
         nextColor = GetRandomColor();
-        
+
         prevBlockPosition = Vector3.down;
+        Spawn_Block();
         Spawn_Block();
     }
 
@@ -46,7 +47,7 @@ public class TheStack : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if(PlaceBlock())
+            if (PlaceBlock())
             {
                 Spawn_Block();
             }
@@ -56,23 +57,23 @@ public class TheStack : MonoBehaviour
                 Debug.Log("GameOver");
             }
         }
-        
+
         MoveBlock();
         transform.position = Vector3.Lerp(transform.position, desiredPosition, StackMovingSpeed * Time.deltaTime);
     }
-    
+
     bool Spawn_Block()
     {
         // 이전블럭 저장
-        if(lastBlock != null)
+        if (lastBlock != null)
             prevBlockPosition = lastBlock.localPosition;
-        
+
         GameObject newBlock = null;
         Transform newTrans = null;
 
         newBlock = Instantiate(originBlock);
 
-        if(newBlock == null)
+        if (newBlock == null)
         {
             Debug.Log("NewBlock Instantiate Failed!");
             return false;
@@ -96,7 +97,7 @@ public class TheStack : MonoBehaviour
         isMovingX = !isMovingX;
         return true;
     }
-    
+
     Color GetRandomColor()
     {
         float r = Random.Range(100f, 250f) / 255f;
@@ -105,14 +106,14 @@ public class TheStack : MonoBehaviour
 
         return new Color(r, g, b);
     }
-    
+
     void ColorChange(GameObject go)
     {
         Color applyColor = Color.Lerp(prevColor, nextColor, (stackCount % 11) / 10f);
 
         Renderer rn = go.GetComponent<Renderer>();
 
-        if(rn == null)
+        if (rn == null)
         {
             Debug.Log("Renderer is NULL!");
             return;
@@ -121,17 +122,17 @@ public class TheStack : MonoBehaviour
         rn.material.color = applyColor;
         Camera.main.backgroundColor = applyColor - new Color(0.1f, 0.1f, 0.1f);
 
-        if(applyColor.Equals(nextColor) == true)
+        if (applyColor.Equals(nextColor) == true)
         {
             prevColor = nextColor;
             nextColor = GetRandomColor();
         }
     }
-    
+
     void MoveBlock()
     {
         blockTransition += Time.deltaTime * BlockMovingSpeed;
-    
+
         float movePosition = Mathf.PingPong(blockTransition, BoundSize) - BoundSize / 2;
 
         if (isMovingX)
@@ -143,7 +144,7 @@ public class TheStack : MonoBehaviour
             lastBlock.localPosition = new Vector3(secondaryPosition, stackCount, -movePosition * MovingBoundsSize);
         }
     }
-    
+
     bool PlaceBlock()
     {
         Vector3 lastPosition = lastBlock.transform.localPosition;
@@ -152,7 +153,7 @@ public class TheStack : MonoBehaviour
         {
             float deltaX = prevBlockPosition.x - lastPosition.x;
             bool isNegativeNum = (deltaX < 0) ? true : false;
-            
+
             deltaX = Mathf.Abs(deltaX);
             if (deltaX > ErrorMargin)
             {
@@ -168,7 +169,7 @@ public class TheStack : MonoBehaviour
                 Vector3 tempPosition = lastBlock.localPosition;
                 tempPosition.x = middle;
                 lastBlock.localPosition = lastPosition = tempPosition;
-                
+
                 float rubbleHalfScale = deltaX / 2;
                 CreateRubble(
                     new Vector3(isNegativeNum
@@ -188,7 +189,7 @@ public class TheStack : MonoBehaviour
         {
             float deltaZ = prevBlockPosition.z - lastPosition.z;
             bool isNegativeNum = (deltaZ < 0) ? true : false;
-            
+
             deltaZ = Mathf.Abs(deltaZ);
             if (deltaZ > ErrorMargin)
             {
@@ -204,7 +205,7 @@ public class TheStack : MonoBehaviour
                 Vector3 tempPosition = lastBlock.localPosition;
                 tempPosition.z = middle;
                 lastBlock.localPosition = lastPosition = tempPosition;
-                
+
                 float rubbleHalfScale = deltaZ / 2;
                 CreateRubble(
                     new Vector3(
@@ -239,5 +240,5 @@ public class TheStack : MonoBehaviour
         go.AddComponent<Rigidbody>();
         go.name = "Rubble";
     }
-    
+
 }

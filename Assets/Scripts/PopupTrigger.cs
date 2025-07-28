@@ -14,13 +14,17 @@ public class PopupTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+
+        Debug.Log("Ãæµ¹");
+
         if (other.CompareTag("Player"))
         {
             balloonUI.SetActive(true);
             Animator animator = balloonUI.GetComponent<Animator>();
             if (animator != null)
-                animator.Play("PopupShow", 0, 0);
+                animator.Play("Popsign", 0, 0);
         }
+
     }
 
     private void OnTriggerExit2D(Collider2D other)
