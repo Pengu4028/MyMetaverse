@@ -9,12 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/MainScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/FlappyPlane/Scenes/FlapScene.unity
+    path: Assets/Scenes/FlapScene.unity
     guid: 16723d154e7a983458c6b0a81dde980a
+  - enabled: 1
+    path: Assets/Scenes/StackScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Scenes/GoldScene.unity
     guid: 36c5e89ca17a1c146a464c99abf15020
-  - enabled: 1
-    path: Assets/Scenes/StackScene.unity
-    guid: c6f7cfd136b557940b1856462b7256f4
   m_configObjects: {}

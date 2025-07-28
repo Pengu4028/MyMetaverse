@@ -1452,7 +1452,7 @@ MonoBehaviour:
   flapforce: 6
   forwardspeed: 3
   isDead: 0
-  godMode: 0
+  godMode: 1
 --- !u!1 &802421967
 GameObject:
   m_ObjectHideFlags: 0
@@ -4350,7 +4350,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 35677586}
-  RestartText: {fileID: 0}
 --- !u!1 &2113784461
 GameObject:
   m_ObjectHideFlags: 0

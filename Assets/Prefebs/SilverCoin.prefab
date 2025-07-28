@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2088610424857956719}
   - component: {fileID: 4341780051550969764}
   - component: {fileID: -4890753726630322971}
+  - component: {fileID: 5327762933986299970}
   m_Layer: 0
   m_Name: SilverCoin
   m_TagString: Untagged
@@ -152,3 +153,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5327762933986299970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8794605518292404090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5aa8e70e33024241ae6c97df1a044cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 5

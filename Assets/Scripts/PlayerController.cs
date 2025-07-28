@@ -8,15 +8,27 @@ public class PlayerController : MonoBehaviour
     public float moveCooldown = 0.01f;
 
     private Rigidbody2D rb;
+    private Animator animator;
     private bool isMoving = false;
     private bool isJumping = false;
     private Vector2 inputDir;
-    private Vector2 lastMoveDir = Vector2.down; // 기본 방향 (아래)
-
+    private Vector2 lastMoveDir = Vector2.down;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        // Body/Sprite 구조를 기반으로 Animator 가져오기
+        Transform sprite = transform.Find("Sprite");
+        if (sprite != null)
+        {
+            animator = sprite.GetComponent<Animator>();
+        }
+
+        if (animator == null)
+        {
+            Debug.LogError("Animator를 Body/Sprite에서 찾을 수 없습니다!");
+        }
     }
 
     void Start()
@@ -24,7 +36,7 @@ public class PlayerController : MonoBehaviour
         rb.drag = 0f;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         inputDir = Vector2.zero;
 
@@ -33,31 +45,21 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKey(KeyCode.LeftArrow)) inputDir = Vector2.left;
         else if (Input.GetKey(KeyCode.RightArrow)) inputDir = Vector2.right;
 
-        bool isTryingToJump = Input.GetKey(KeyCode.Space);
+        bool isTryingToJump = Input.GetKeyDown(KeyCode.Space);
+
+        // 애니메이터 연결이 되어 있다면 애니메이션 작동
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", inputDir != Vector2.zero);
+        }
 
         if (!isMoving && !isJumping)
         {
             if (isTryingToJump)
             {
-                if (inputDir == Vector2.zero)
-                {
-                    // 제자리 점프
-                    LookAtDirection(lastMoveDir);
-                    StartCoroutine(JumpInPlace());
-                }
-                else
-                {
-                    // 이동방향 점프 (2칸)
-                    Vector2 jumpDir = inputDir;
-                    Vector3 target = transform.position + (Vector3)jumpDir * gridSize * 2f;
-
-                    if (!IsBlocked(target))
-                    {
-                        LookAtDirection(jumpDir);
-                        StartCoroutine(JumpToPosition(target));
-                        lastMoveDir = jumpDir;
-                    }
-                }
+                LookAtDirection(lastMoveDir);
+                if (animator != null) animator.SetTrigger("Jump");
+                StartCoroutine(JumpAnimationLock());
             }
             else if (inputDir != Vector2.zero)
             {
@@ -72,18 +74,19 @@ public class PlayerController : MonoBehaviour
         }
         else if (isMoving && isTryingToJump && !isJumping)
         {
-            // 이동 중에 점프 시도 (이동 방향 2칸 점프)
-            Vector2 jumpDir = lastMoveDir;
-            Vector3 target = transform.position + (Vector3)jumpDir * gridSize * 2f;
-
-            if (!IsBlocked(target))
-            {
-                LookAtDirection(jumpDir);
-                StopAllCoroutines(); // 이동 코루틴 멈추고 점프 시작
-                isMoving = false;
-                StartCoroutine(JumpToPosition(target));
-            }
+            LookAtDirection(lastMoveDir);
+            if (animator != null) animator.SetTrigger("Jump");
+            StopAllCoroutines(); // 이동 중 점프 시 이동 중지
+            isMoving = false;
+            StartCoroutine(JumpAnimationLock());
         }
+    }
+
+    IEnumerator JumpAnimationLock()
+    {
+        isJumping = true;
+        yield return new WaitForSeconds(0.4f); // 점프 애니메이션 길이에 맞춤
+        isJumping = false;
     }
 
     bool IsBlocked(Vector3 target)
@@ -92,71 +95,12 @@ public class PlayerController : MonoBehaviour
         return hit != null && hit.gameObject.name == "Collision";
     }
 
-void LookAtDirection(Vector2 dir)
-{
-    if (dir.x > 0)
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-    else if (dir.x < 0)
-        transform.rotation = Quaternion.Euler(0, 180, 0);
-}
-
-    IEnumerator JumpToPosition(Vector3 target)
+    void LookAtDirection(Vector2 dir)
     {
-        isJumping = true;
-
-        Vector3 start = rb.position;
-        float duration = 0.25f;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            float t = elapsed / duration;
-            float height = Mathf.Sin(Mathf.PI * t) * 0.2f;
-
-            // y축 위치는 고정, 점프 효과는 자식 오브젝트 등에서 구현
-            Vector3 newPos = Vector3.Lerp(start, target, t);
-            newPos.y = start.y; // y 고정
-
-            rb.MovePosition(newPos);
-
-            // 만약 점프 비주얼을 위해 별도 Sprite 위치 조절 가능 (아래 참고)
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        rb.MovePosition(target);
-
-        yield return new WaitForSeconds(moveCooldown);
-        isJumping = false;
-    }
-
-
-    // 제자리 점프 코루틴 (x, z 좌표 고정, y축만 튀어오름)
-    IEnumerator JumpInPlace()
-    {
-        isJumping = true;
-
-        Vector3 start = rb.position;
-        float duration = 0.25f;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            float t = elapsed / duration;
-            float height = Mathf.Sin(Mathf.PI * t) * 0.5f;
-            Vector3 newPos = start;
-            newPos.y += height;
-
-            rb.MovePosition(newPos);
-
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        rb.MovePosition(start);
-
-        yield return new WaitForSeconds(moveCooldown);
-        isJumping = false;
+        if (dir.x > 0)
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        else if (dir.x < 0)
+            transform.rotation = Quaternion.Euler(0, 180, 0);
     }
 
     IEnumerator MoveToPosition(Vector3 target)
@@ -166,7 +110,7 @@ void LookAtDirection(Vector2 dir)
         while ((target - (Vector3)rb.position).sqrMagnitude > 0.01f)
         {
             Vector3 prev = rb.position;
-            rb.MovePosition(Vector3.MoveTowards(rb.position, target, moveSpeed * Time.deltaTime));
+            rb.MovePosition(Vector3.MoveTowards(rb.position, target, moveSpeed * Time.fixedDeltaTime));
             yield return null;
 
             if (((Vector3)rb.position - prev).sqrMagnitude < 0.0001f)

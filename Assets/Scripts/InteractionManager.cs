@@ -12,7 +12,7 @@ public class InteractionManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    //안씀!!
+    //안씀!! // 박스에서 다이렉트로 인터랙션 진행
     //public void StartInteraction(GameObject obj)
     //{
     //    Debug.Log("Interacting with: " + obj.name);

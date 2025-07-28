@@ -11,11 +11,15 @@ public class Coin : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // 점수 올리기 (예: GameManager에 점수 증가 함수 호출)
-            GameManager.Instance.AddScore(scoreValue);
-
-            // 동전 제거
-            Destroy(gameObject);
+            if (Main.GameManager.Instance != null)
+            {
+                Main.GameManager.Instance.AddScore(scoreValue);
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.LogError("GameManager.Instance is null in Coin!");
+            }
         }
     }
 }

@@ -16,6 +16,13 @@ public class CoinManager : MonoBehaviour
     {
         for (int i = 0; i < coinCount; i++)
         {
+
+            if (coinPrefabs.Length == 0)
+            {
+                Debug.LogWarning("coinPrefabs 배열이 비어 있습니다!");
+                return;
+            }
+
             // coinPrefabs 중 랜덤 선택
             int index = Random.Range(0, coinPrefabs.Length);
             GameObject coin = coinPrefabs[index];
